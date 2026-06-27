@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD: phuonganh.pm Portfolio Site - Confluence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --conf-blue: #0C66E4;
+    --conf-blue-dark: #0055CC;
+    --text: #172B4D;
+    --text-subtle: #626F86;
+    --text-faint: #8590A2;
+    --bg: #FFFFFF;
+    --bg-page: #F7F8F9;
+    --line: #DCDFE4;
+    --line-light: #EBECF0;
+    --green-bg: #DFFCF0;
+    --green-text: #216E4E;
+    --yellow-bg: #FFF7D6;
+    --yellow-text: #7F5F01;
+    --purple-bg: #EAE6FF;
+    --purple-text: #5E4DB2;
+    --sans: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg-page); color: var(--text); font-family: var(--sans);
+    font-size: 14px; line-height: 1.5;
+  }
+  a { color: var(--conf-blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ───────── Top bar ───────── */
+  .topbar {
+    background: var(--bg); border-bottom: 1px solid var(--line); height: 48px;
+    display: flex; align-items: center; padding: 0 16px; gap: 16px; position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 15px; color: var(--text); }
+  .topbar-logo .mark { width: 22px; height: 22px; background: var(--conf-blue); border-radius: 5px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 800; }
+  .topbar-search {
+    flex: 1; max-width: 360px; height: 32px; background: var(--bg-page); border-radius: 6px;
+    display: flex; align-items: center; padding: 0 12px; color: var(--text-faint); font-size: 13px; gap: 8px;
+  }
+  .topbar-right { display: flex; align-items: center; gap: 14px; margin-left: auto; color: var(--text-subtle); font-size: 13px; }
+  .avatar-circle { width: 26px; height: 26px; border-radius: 50%; background: var(--purple-bg); color: var(--purple-text); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; }
+
+  /* ───────── Layout ───────── */
+  .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .sidebar {
+    width: 260px; flex-shrink: 0; padding: 20px 12px; border-right: 1px solid var(--line);
+    background: var(--bg); min-height: calc(100vh - 48px); display: block;
+  }
+  .sidebar-title { font-size: 12px; font-weight: 700; color: var(--text-subtle); text-transform: uppercase; letter-spacing: 0.03em; padding: 0 8px; margin: 18px 0 8px; }
+  .sidebar-title:first-child { margin-top: 4px; }
+  .sidebar-item { padding: 7px 8px; border-radius: 4px; font-size: 13.5px; color: var(--text-subtle); cursor: default; display: flex; align-items: center; gap: 6px; }
+  .sidebar-item.active { background: #E9F2FF; color: var(--conf-blue-dark); font-weight: 600; }
+  .sidebar-item.nested { padding-left: 22px; font-size: 13px; color: var(--text-faint); }
+  .sidebar-item .icon { opacity: 0.6; font-size: 12px; flex-shrink: 0; }
+
+  .main { flex: 1; padding: 0; max-width: 900px; margin: 0 auto; width: 100%; }
+
+  /* ───────── Breadcrumb ───────── */
+  .breadcrumb { padding: 20px 40px 0; font-size: 13px; color: var(--text-faint); display: flex; align-items: center; gap: 6px; }
+  .breadcrumb a { color: var(--text-faint); }
+  .breadcrumb a:hover { color: var(--conf-blue); text-decoration: underline; }
+
+  /* ───────── Page header ───────── */
+  .page-header { padding: 16px 40px 24px; border-bottom: 1px solid var(--line-light); }
+  .page-title { font-size: 30px; font-weight: 700; color: var(--text); margin-bottom: 14px; letter-spacing: -0.01em; }
+  .page-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .meta-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--purple-bg); color: var(--purple-text); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; }
+  .meta-text { font-size: 13px; color: var(--text-subtle); }
+  .meta-text b { color: var(--text); font-weight: 600; }
+  .status-badge {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 3px 10px;
+    border-radius: 4px; text-transform: uppercase; letter-spacing: 0.02em;
+  }
+  .status-shipped { background: var(--green-bg); color: var(--green-text); }
+  .page-actions { display: flex; gap: 8px; }
+  .page-btn { font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--line); color: var(--text-subtle); background: var(--bg); }
+
+  /* ───────── Content ───────── */
+  .content { padding: 24px 40px 80px; }
+  .content h2 {
+    font-size: 20px; font-weight: 700; color: var(--text); margin: 36px 0 14px; letter-spacing: -0.005em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .content h2:first-child { margin-top: 0; }
+  .content h2 .num { color: var(--text-faint); font-weight: 500; font-size: 16px; }
+  .content p { color: var(--text); margin-bottom: 14px; line-height: 1.7; font-size: 15px; }
+  .content p.subtle { color: var(--text-subtle); font-size: 14px; }
+  .content strong { font-weight: 600; }
+  .content ul, .content ol { margin: 0 0 16px 22px; }
+  .content li { margin-bottom: 6px; line-height: 1.65; font-size: 15px; }
+
+  .info-panel {
+    display: flex; gap: 10px; padding: 12px 16px; border-radius: 6px; margin: 16px 0; font-size: 14px;
+  }
+  .info-panel.note { background: #E9F2FF; }
+  .info-panel.warning { background: var(--yellow-bg); }
+  .info-panel .icon { flex-shrink: 0; font-weight: 700; }
+
+  .story-card {
+    border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; margin-bottom: 16px; background: var(--bg);
+  }
+  .story-id { font-size: 12px; font-weight: 700; color: var(--conf-blue); margin-bottom: 6px; }
+  .story-text { font-size: 15px; color: var(--text); margin-bottom: 12px; line-height: 1.6; }
+  .story-text em { color: var(--text-subtle); font-style: italic; }
+  .ac-list { list-style: none; margin: 0; padding: 0; }
+  .ac-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 13.5px; color: var(--text-subtle); margin-bottom: 7px; line-height: 1.55; }
+  .ac-list li:last-child { margin-bottom: 0; }
+  .ac-check { flex-shrink: 0; width: 16px; height: 16px; border: 1.5px solid var(--green-text); border-radius: 3px; background: var(--green-bg); color: var(--green-text); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; margin-top: 1px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; }
+  th { background: var(--bg-page); text-align: left; padding: 10px 14px; font-weight: 600; border: 1px solid var(--line); color: var(--text-subtle); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.02em; }
+  td { padding: 10px 14px; border: 1px solid var(--line); vertical-align: top; }
+
+  .tag-chip {
+    display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 4px; margin-right: 4px;
+  }
+  .tag-risk { background: #FFEDEB; color: #AE2E24; }
+  .tag-mitigated { background: var(--green-bg); color: var(--green-text); }
+
+  blockquote {
+    border-left: 3px solid var(--line); padding-left: 16px; margin: 16px 0; color: var(--text-subtle); font-style: italic;
+  }
+
+  hr { border: none; border-top: 1px solid var(--line-light); margin: 32px 0; }
+
+  .comment-callout {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .comment-callout-title { font-size: 14px; font-weight: 700; color: var(--text-subtle); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .comment {
+    display: flex; gap: 12px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line-light);
+  }
+  .comment:last-child { border-bottom: none; }
+  .comment-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; }
+  .comment-body { flex: 1; }
+  .comment-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+  .comment-time { font-size: 12px; color: var(--text-faint); margin-left: 6px; font-weight: 400; }
+  .comment-text { font-size: 14px; color: var(--text); margin-top: 4px; line-height: 1.55; }
+
+  .back-link {
+    display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-subtle);
+    padding: 16px 40px; text-decoration: none; background: var(--bg-page);
+    margin-bottom: 4px;
+  }
+  .back-link:hover { color: var(--conf-blue); text-decoration: none; }
+
+  @media (max-width: 760px) {
+    .breadcrumb, .page-header, .content, .back-link { padding-left: 20px; padding-right: 20px; }
+    .page-title { font-size: 24px; }
+    table { font-size: 12.5px; }
+    th, td { padding: 8px 10px; }
+    .sidebar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo"><span class="mark">C</span> phuonganh-space</div>
+  <div class="topbar-search">🔍 Search this space</div>
+  <div class="topbar-right">
+    <span>👁 3 watchers</span>
+    <div class="avatar-circle">PA</div>
+  </div>
+</div>
+
+<a href="index.html" class="back-link">← back to the actual portfolio (you weren't supposed to be here)</a>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-title">Product Docs</div>
+    <div class="sidebar-item"><span class="icon">📄</span> Roadmap 2026 (Personal)</div>
+    <div class="sidebar-item active"><span class="icon">📄</span> PRD: Portfolio Site</div>
+    <div class="sidebar-item nested">↳ Retro notes</div>
+    <div class="sidebar-item nested">↳ Comments (4)</div>
+    <div class="sidebar-item"><span class="icon">📄</span> PRD: Job Search Funnel v3</div>
+    <div class="sidebar-item"><span class="icon">📄</span> RFC: Should I Learn Unity</div>
+    <div class="sidebar-item"><span class="icon">📄</span> PRD: Responding To Recruiters Politely</div>
+    <div class="sidebar-item"><span class="icon">📄</span> PRD: Five Whys, But For My Own Career</div>
+    <div class="sidebar-item"><span class="icon">📄</span> Spec: Game Idea I Will Probably Never Ship</div>
+    <div class="sidebar-item"><span class="icon">📄</span> PRD: Convincing My Manager This Was a Good Idea</div>
+    <div class="sidebar-item"><span class="icon">📄</span> RFC: Is "AI Matching" Actually Just If-Else</div>
+
+    <div class="sidebar-title">Strategy</div>
+    <div class="sidebar-item"><span class="icon">📊</span> Career Strategy.fig</div>
+    <div class="sidebar-item"><span class="icon">📊</span> Q3 Personal OKRs (0% complete)</div>
+    <div class="sidebar-item"><span class="icon">📊</span> Competitive Analysis: Other PMs On LinkedIn</div>
+    <div class="sidebar-item"><span class="icon">📊</span> Editor-to-PM Migration Plan, Final</div>
+
+    <div class="sidebar-title">Postmortems</div>
+    <div class="sidebar-item"><span class="icon">🔥</span> Incident Report: That One Interview</div>
+    <div class="sidebar-item"><span class="icon">🔥</span> RCA: The Time I Rewrote a Draft 6 Times Because It Sounded Like AI</div>
+    <div class="sidebar-item"><span class="icon">🔥</span> RCA: Why I Asked "Why" Five Times in One Standup</div>
+
+    <div class="sidebar-title">Drafts</div>
+    <div class="sidebar-item"><span class="icon">📝</span> Untitled PRD (47)</div>
+    <div class="sidebar-item"><span class="icon">📝</span> Cover Letter, Final Final v9</div>
+    <div class="sidebar-item"><span class="icon">📝</span> Notes From a Book I Edited Once</div>
+    <div class="sidebar-item"><span class="icon">📝</span> Why I Keep 12 Browser Tabs Open (Research)</div>
+  </div>
+
+  <div class="main">
+    <div class="breadcrumb">
+      <a href="#">phuonganh-space</a> <span>/</span> <a href="#">Product Docs</a> <span>/</span> <span style="color: var(--text);">PRD: Portfolio Site</span>
+    </div>
+
+    <div class="page-header">
+      <div class="page-title">PRD: phuonganh.pm — Personal Portfolio Site</div>
+      <div class="page-meta">
+        <div class="meta-avatar">PA</div>
+        <span class="meta-text">Owned by <b>Le Thi Phuong Anh</b> · edited just now, allegedly</span>
+        <span class="status-badge status-shipped">✓ Shipped</span>
+      </div>
+      <div class="page-actions">
+        <span class="page-btn">📄 Export</span>
+        <span class="page-btn">⭐ Watching</span>
+        <span class="page-btn">💬 4 comments</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <p class="subtle"><em>Yes, this is a real PRD, about a portfolio site, written by the person the portfolio is for. No, I will not be taking questions about what this says about me.</em></p>
+
+      <h2><span class="num">1.</span> Problem Statement</h2>
+      <p>Job-seeking PMs in Vietnam's tech market mostly look identical on paper: a PDF resume, a LinkedIn profile, maybe a Notion page with bullet points copied from the CV. None of that gives a hiring manager a reason to <strong>remember</strong> a candidate specifically, and none of it demonstrates product thinking — it just describes it.</p>
+      <p>I needed something that did three jobs at once:</p>
+      <ol>
+        <li>Pass the 10-second scan test (what do you do, what have you shipped, can I contact you)</li>
+        <li>Prove product judgment through the <strong>form</strong> of the artifact, not just its content</li>
+        <li>Be memorable enough that a recruiter looking at portfolio #38 that day actually remembers mine</li>
+      </ol>
+
+      <h2><span class="num">2.</span> Goals</h2>
+      <ul>
+        <li><strong>Primary:</strong> Get more interview callbacks per application sent, specifically for PM roles at consumer/marketplace product companies in Vietnam</li>
+        <li><strong>Secondary:</strong> Signal a transferable skill set if I eventually pivot toward game industry roles</li>
+        <li><strong>Tertiary:</strong> Have something I'm not embarrassed to put on a resume, unlike a generic Notion doc</li>
+      </ul>
+
+      <h2><span class="num">3.</span> Non-Goals</h2>
+      <ul>
+        <li>Not trying to win a design award — visual polish is in service of memorability, not the goal itself</li>
+        <li>Not building a CMS or anything dynamic — static site, manually edited, that's fine at this scale</li>
+        <li>Not optimizing for every possible employer — explicitly accepting tone risk with more conservative reviewers in exchange for higher signal with the right ones (see Risks)</li>
+      </ul>
+
+      <h2><span class="num">4.</span> Target User</h2>
+      <p><strong>Primary:</strong> A hiring manager or recruiter at a consumer-facing tech company, mid-funnel in their hiring process, who has 5–10 portfolios to review in one sitting and has already skimmed a hundred LinkedIn profiles that all sound the same.</p>
+      <p><strong>User need:</strong> Decide in under 2 minutes whether this candidate is worth a 30-minute screening call.</p>
+
+      <div class="info-panel note">
+        <span class="icon">ℹ️</span>
+        <span><strong>Explicitly not optimized for:</strong> highly conservative or traditional enterprise reviewers who read playful design as a lack of seriousness. Known tradeoff, not an oversight — a more conservative fallback variant exists for specific applications where this risk matters more.</span>
+      </div>
+
+      <h2><span class="num">5.</span> Solution</h2>
+      <p>A single-page site styled as a low-fidelity wireframe / Balsamiq mockup — using the medium itself as the argument: a PM who thinks in flows, tickets, and structured documents, presented through an artifact that looks exactly like the tools she uses daily.</p>
+
+      <table>
+        <tr><th>Section</th><th>Job to be done</th></tr>
+        <tr><td>Hero</td><td>State the thesis in one line: finds the real problem, builds the fix</td></tr>
+        <tr><td>Career Flow</td><td>Show the throughline across 3 job titles as one consistent skill, not a scattered job history</td></tr>
+        <tr><td>Selected Work (tickets)</td><td>3 real case studies — problem → approach → impact — with live links to the shipped products</td></tr>
+        <tr><td>Side Quest</td><td>Honest signal of a personal interest (game design) without overclaiming expertise</td></tr>
+        <tr><td>360° Review</td><td>Anonymous comedic "testimonials" surfacing real behavioral traits without sounding self-written</td></tr>
+        <tr><td>Skills Board</td><td>Categorized competencies with honest self-assessment tiers</td></tr>
+        <tr><td>Contact</td><td>Self-selecting fit criteria + two CTAs (email, CV download)</td></tr>
+        <tr><td>This Page</td><td>Reward someone for actually digging around instead of skimming. You. Specifically you.</td></tr>
+      </table>
+
+      <h2><span class="num">6.</span> User Stories & Acceptance Criteria</h2>
+      <p class="subtle"><em>Yes, I wrote real Gherkin-style user stories for my own portfolio. No, I don't think that's normal. I did it anyway.</em></p>
+
+      <div class="story-card">
+        <div class="story-id">US-01 · P0</div>
+        <div class="story-text">As a <strong>hiring manager with 40 tabs open and the will to live slowly draining</strong>, I want to understand what this person actually does within 10 seconds, <em>so that</em> I don't have to read an entire case study just to decide if I should keep reading.</div>
+        <ul class="ac-list">
+          <li><span class="ac-check">✓</span> Hero states the thesis in one sentence, no scrolling required</li>
+          <li><span class="ac-check">✓</span> Career flow shows 3 job titles resolving into one throughline, not three unrelated vibes</li>
+          <li><span class="ac-check">✓</span> Given I only read the hero and bounce, I should still know what role to email her about</li>
+          <li><span class="ac-check">✓</span> Given I am extremely tired, the page should not ask anything of me beyond "scroll"</li>
+        </ul>
+      </div>
+
+      <div class="story-card">
+        <div class="story-id">US-02 · P0</div>
+        <div class="story-text">As <strong>someone professionally trained to be suspicious of resume bullet points</strong>, I want to verify the case studies are real and not embellished, <em>so that</em> I don't get blindsided in the interview when I ask a follow-up.</div>
+        <ul class="ac-list">
+          <li><span class="ac-check">✓</span> Every case study links to the live, real product (onehub.vn, herond.org, nobinobi.vn)</li>
+          <li><span class="ac-check">✓</span> Stats are specific enough to be falsifiable, not vague enough to dodge a follow-up question</li>
+          <li><span class="ac-check">✓</span> Given a skeptical reader, the links should survive a 2-second sanity check and ideally a 10-minute one too</li>
+        </ul>
+      </div>
+
+      <div class="story-card">
+        <div class="story-id">US-03 · P1</div>
+        <div class="story-text">As <strong>a person whose entire job is downloading PDFs named "Final_v2_FINAL"</strong>, I want the "Download CV" button to behave like a normal button, <em>so that</em> I don't have to email her asking where the actual file went.</div>
+        <ul class="ac-list">
+          <li><span class="ac-check">✓</span> Clicking "Download CV" downloads an actual PDF, not a 404 with a side of embarrassment</li>
+          <li><span class="ac-check">✓</span> Filename matches exactly between the HTML and the uploaded file <em>(see: Risks, "Fragility" — yes, I broke this myself first, no I will not be elaborating further)</em></li>
+          <li><span class="ac-check">✓</span> Given the file is hosted next to the page, it should not silently die the moment the repo gets reorganized at 1am</li>
+        </ul>
+      </div>
+
+      <div class="story-card">
+        <div class="story-id">US-04 · P2, but emotionally P0</div>
+        <div class="story-text">As <strong>the one person who actually reads the footer instead of immediately closing the tab</strong>, I want to be rewarded for paying attention, <em>so that</em> snooping around someone's portfolio at 11pm feels like time well spent.</div>
+        <ul class="ac-list">
+          <li><span class="ac-check">✓</span> A genuinely hidden link exists, disguised as normal, boring footer text</li>
+          <li><span class="ac-check">✓</span> A console message exists for the specific subset of people who open dev tools for no reason, like feral raccoons</li>
+          <li><span class="ac-check">✓</span> Given I find either path, I should land on a document that rewards the effort instead of a 404 that makes me feel stupid for trying</li>
+        </ul>
+      </div>
+
+      <div class="story-card" style="border-style: dashed; opacity: 0.85;">
+        <div class="story-id">US-05 · Will not fix</div>
+        <div class="story-text">As <strong>me, at 1am, writing acceptance criteria for my own personal website</strong>, I want to acknowledge that this is a lot of process for a portfolio, <em>so that</em> future-me reading this doesn't think past-me has completely lost the plot.</div>
+        <ul class="ac-list">
+          <li><span class="ac-check">✓</span> This story exists</li>
+          <li><span class="ac-check">✓</span> I have made peace with it</li>
+          <li><span class="ac-check">✓</span> Given that you're reading this far, you have too</li>
+        </ul>
+      </div>
+
+      <h2><span class="num">7.</span> Success Metrics</h2>
+      <p>Since this isn't an A/B-testable product, the real success metrics are qualitative and slow-feedback:</p>
+      <ul>
+        <li>Interview callback rate per application where this link was included vs. a plain CV-only application</li>
+        <li>Anecdotal: does a recruiter mention the portfolio unprompted in a screening call</li>
+        <li>Whether anyone actually clicks through to onehub.vn / herond.org / nobinobi.vn (can't currently instrument this — see Open Questions)</li>
+        <li><em>Whether anyone finds this exact page.</em> If you're reading this, that metric just incremented by one.</li>
+      </ul>
+
+      <h2><span class="num">8.</span> Risks & Mitigations</h2>
+      <table>
+        <tr><th>Risk</th><th>Mitigation</th></tr>
+        <tr>
+          <td><span class="tag-chip tag-risk">Tone risk</span> Humor reads as "not serious enough" for conservative employers</td>
+          <td><span class="tag-chip tag-mitigated">Accepted</span> A neutral fallback variant exists for applications where this risk is too high</td>
+        </tr>
+        <tr>
+          <td><span class="tag-chip tag-risk">Visual risk</span> The wireframe aesthetic itself reads as unconventional, independent of jokes</td>
+          <td><span class="tag-chip tag-risk">Unmitigated</span> Deliberately not solved here — this is the bet</td>
+        </tr>
+        <tr>
+          <td><span class="tag-chip tag-risk">Infra risk</span> Hosted on free GitHub Pages, no custom domain, depends on me maintaining the repo</td>
+          <td><span class="tag-chip tag-mitigated">Accepted</span> Low cost at this stage, revisit if this becomes long-term rather than job-search tooling</td>
+        </tr>
+        <tr>
+          <td><span class="tag-chip tag-risk">Fragility</span> Static file means CV download breaks if filenames don't match exactly</td>
+          <td><span class="tag-chip tag-mitigated">Resolved</span> Already hit this bug in production. Fixed. Lesson learned the embarrassing way.</td>
+        </tr>
+      </table>
+
+      <h2><span class="num">9.</span> Open Questions / Future Work</h2>
+      <ul>
+        <li>No analytics instrumented — I don't actually know if anyone reads past the hero, or which case study lands hardest.</li>
+        <li>No CMS — fine at current scale, would need a lighter editing workflow if this grows.</li>
+        <li>The "In Progress" skill tier (Strategic Product Thinking) is the only forward-looking claim on the page. Worth revisiting whether one honest gap is the right amount of vulnerability to signal, or whether to add a second.</li>
+        <li>Untested: whether the conservative fallback variant actually gets used in practice, or whether I default to the bold version regardless of employer type.</li>
+        <li>Whether building a secret PRD page about a portfolio site was a good use of an evening or a sign I should be doing literally anything else. Pending further research.</li>
+      </ul>
+
+      <hr>
+
+      <p class="subtle">If you found this through the console message: hi, you're exactly the kind of person I want reading this. If you found it through the footer: also hi, same energy, slightly different method.</p>
+
+    </div>
+
+    <div class="comment-callout content">
+      <div class="comment-callout-title">💬 4 comments</div>
+
+      <div class="comment">
+        <div class="comment-avatar" style="background: #FFEDEB; color: #AE2E24;">??</div>
+        <div class="comment-body">
+          <span class="comment-name">Unnamed Reviewer<span class="comment-time">· 2 days ago</span></span>
+          <div class="comment-text">Wait, is this real or is this a bit. I need to know before I approve this PRD.</div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="comment-avatar" style="background: #DFFCF0; color: #216E4E;">PA</div>
+        <div class="comment-body">
+          <span class="comment-name">Le Thi Phuong Anh<span class="comment-time">· 2 days ago</span></span>
+          <div class="comment-text">Yes.</div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="comment-avatar" style="background: #EAE6FF; color: #5E4DB2;">HR</div>
+        <div class="comment-body">
+          <span class="comment-name">Someone From HR, Probably<span class="comment-time">· 19 hours ago</span></span>
+          <div class="comment-text">We don't usually see this level of detail applied to a job hunt. Saying that as a compliment. Mostly.</div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="comment-avatar" style="background: #FFF7D6; color: #7F5F01;">??</div>
+        <div class="comment-body">
+          <span class="comment-name">Unnamed Reviewer<span class="comment-time">· 3 hours ago</span></span>
+          <div class="comment-text">Approving. Mostly because I want to see what she builds next.</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
