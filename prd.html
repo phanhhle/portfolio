@@ -47,6 +47,7 @@
   }
   .topbar-right { display: flex; align-items: center; gap: 14px; margin-left: auto; color: var(--text-subtle); font-size: 13px; }
   .avatar-circle { width: 26px; height: 26px; border-radius: 50%; background: var(--purple-bg); color: var(--purple-text); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; }
+  .sidebar-toggle { display: none; font-size: 12.5px; font-weight: 600; color: var(--text-subtle); background: var(--bg-page); border: 1px solid var(--line); border-radius: 5px; padding: 6px 10px; cursor: pointer; }
 
   /* ───────── Layout ───────── */
   .layout { display: flex; max-width: 1400px; margin: 0 auto; }
@@ -158,6 +159,9 @@
     table { font-size: 12.5px; }
     th, td { padding: 8px 10px; }
     .sidebar { display: none; }
+      .sidebar.mobile-open { display: block; position: fixed; top: 0; left: 0; bottom: 0; width: 260px; z-index: 200; box-shadow: 2px 0 12px rgba(0,0,0,0.15); overflow-y: auto; }
+      .sidebar-toggle { display: inline-block; }
+      .topbar { height: auto; min-height: 48px; flex-wrap: nowrap; }
   }
 </style>
 </head>
@@ -168,6 +172,7 @@
   <div class="topbar-search">🔍 Search this space</div>
   <div class="topbar-right">
     <span>👁 3 watchers</span>
+    <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('mobile-open')">☰ Pages</button>
     <div class="avatar-circle">PA</div>
   </div>
 </div>
@@ -415,6 +420,18 @@
 
   </div>
 </div>
-
+  
+<script>
+  document.addEventListener('click', function(e) {
+    const sidebar = document.querySelector('.sidebar');
+    const toggle = document.querySelector('.sidebar-toggle');
+    if (sidebar && sidebar.classList.contains('mobile-open')) {
+      if (!sidebar.contains(e.target) && e.target !== toggle) {
+        sidebar.classList.remove('mobile-open');
+      }
+    }
+  });
+</script>
+  
 </body>
 </html>
